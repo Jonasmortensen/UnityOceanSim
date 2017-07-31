@@ -12,5 +12,7 @@ public class ShadedOceanSurface : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         Shader.SetGlobalFloat("_WaterTime", Time.time);
+
+        var mesh = GetComponent<MeshFilter>().mesh;
     }
 }

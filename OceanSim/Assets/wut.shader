@@ -1,6 +1,4 @@
-﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
-
-Shader "Custom/ShaderTest1" {
+﻿Shader "Custom/wut" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
@@ -13,7 +11,7 @@ Shader "Custom/ShaderTest1" {
 		
 		CGPROGRAM
 		// Physically based Standard lighting model, and enable shadows on all light types
-		#pragma surface surf Standard vertex:vert addshadow
+		#pragma surface surf Standard fullforwardshadows
 
 		// Use shader model 3.0 target, to get nicer looking lighting
 		#pragma target 3.0
@@ -23,7 +21,6 @@ Shader "Custom/ShaderTest1" {
 		struct Input {
 			float2 uv_MainTex;
 		};
-
 
 		half _Glossiness;
 		half _Metallic;
@@ -35,35 +32,6 @@ Shader "Custom/ShaderTest1" {
 		UNITY_INSTANCING_CBUFFER_START(Props)
 			// put more per-instance properties here
 		UNITY_INSTANCING_CBUFFER_END
-
-		float _WaterTime;
-
-		float3 getWavePos(float3 pos) {
-			float amplitude = 5.0;
-			float waveLength = 10.0;
-			float speed = 1.0;
-			float2 direction = float2(-1.0, 0.0);
-			float frequency = 2.0 / waveLength;
-			float phaseConstant = speed * frequency;
-			float constant = dot(direction, float2(pos.x, pos.z)) * frequency + _WaterTime * phaseConstant;
-			pos.y = amplitude * sin(constant);
-			return pos;
-		}
-
-		void vert(inout appdata_full IN) {
-			//Get the global position of the vertex
-			float4 worldPos = mul(unity_ObjectToWorld, IN.vertex);
-
-			//Manipulate the position
-			
-			float3 withWave = getWavePos(worldPos.xyz);
-
-			//Convert the position back to local
-			float4 localPos = mul(unity_WorldToObject, float4(withWave, worldPos.w));
-
-			//Assign the modified vertex
-			IN.vertex = localPos;
-		}
 
 		void surf (Input IN, inout SurfaceOutputStandard o) {
 			// Albedo comes from a texture tinted by color

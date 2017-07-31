@@ -21,6 +21,12 @@ public class OceanSurface : MonoBehaviour {
 
         Waves = new List<IWave>();
 
+        var wave = new SineWave();
+        wave.UpdateConfiguration();
+        Waves.Add(wave);
+        
+
+        /*
         var wave1 = new GerstnerWave();//new SineWave();
         wave1.UpdateConfiguration();
 
@@ -41,6 +47,7 @@ public class OceanSurface : MonoBehaviour {
         Waves.Add(wave1);
         Waves.Add(wave2);
         Waves.Add(wave3);
+        */
     }
 	
 	// Update is called once per frame
