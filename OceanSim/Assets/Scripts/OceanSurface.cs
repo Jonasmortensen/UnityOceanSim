@@ -25,15 +25,15 @@ public class OceanSurface : MonoBehaviour {
         wave1.UpdateConfiguration();
 
         var wave2 = new GerstnerWave();//new SineWave();
-        wave2.WaveLength = 5.0f;
-        wave2.Amplitude = 0.25f;
+        wave2.WaveLength = 4.0f;
+        wave2.Amplitude = 0.8f;
         var direction = new Vector2(-3.0f, -1.0f);
         wave2.Direction = direction.normalized;
         wave2.UpdateConfiguration();
 
         var wave3 = new GerstnerWave();//new SineWave();
         wave3.WaveLength = 2.0f;
-        wave3.Amplitude = 0.1f;
+        wave3.Amplitude = 0.04f;
         var direction3 = new Vector2(-3.0f, 2.0f);
         wave3.Direction = direction3.normalized;
         wave3.UpdateConfiguration();
