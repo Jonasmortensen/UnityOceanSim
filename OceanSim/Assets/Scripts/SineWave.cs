@@ -18,6 +18,11 @@ public class SineWave : MonoBehaviour, IWave {
 		
 	}
 
+    public void updateConfiguration() {
+        _frequency = 2 / WaveLength;
+        _phaseConstant = Speed * _frequency;
+    }
+
     public Vector3 getPositionOffset(float x, float z, float time) {
         var position = new Vector2(x, z);
         var y = Amplitude * Mathf.Sin(Vector2.Dot(Direction, position) * _frequency + time * _phaseConstant);
