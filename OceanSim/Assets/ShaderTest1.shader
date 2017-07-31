@@ -39,7 +39,6 @@ Shader "Custom/ShaderTest1" {
 		struct WaveResult {
 			float3 pos;
 			float3 normal;
-			float3 tangent;
 		};
 
 		float _WaterTime;
@@ -56,24 +55,27 @@ Shader "Custom/ShaderTest1" {
 			float wa = frequency * amplitude;
 			float s = sin(constant);
 			float c = cos(constant);
-			float q = 0.0f;
+			float q = 1.7;
 
-			float3 tangent = float3(0.0, direction.y * wa * c, 1.0);
-			float3 normal = float3(-direction.x * wa * c, 1.0, -direction.y * wa * c);
+			float3 wavedPos =	
+				float3(
+					pos.x + q * amplitude * direction.x * c,
+					amplitude * s,
+					pos.z + q * amplitude * direction.y * c	
+				);
+
+			float3 normal = float3(-direction.x * wa * c, 1 - q * wa * s, -direction.y * wa * c);
 
 			pos.y = amplitude * sin(constant);
 			WaveResult result;
-			result.pos = pos;
+			result.pos = wavedPos;
 			result.normal = normal;
-			result.tangent = tangent;
-			//Tangent must have (0, bla (right), 1)
-			//Bi must have (1, bla (right), 0)
 
 
 			return result;
 		}
 
-		void vert(inout appdata_base IN) {
+		void vert(inout appdata_full IN) {
 			//Get the global position of the vertex
 			float4 worldPos = mul(unity_ObjectToWorld, IN.vertex);
 
