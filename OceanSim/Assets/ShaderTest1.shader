@@ -36,33 +36,60 @@ Shader "Custom/ShaderTest1" {
 			// put more per-instance properties here
 		UNITY_INSTANCING_CBUFFER_END
 
+		struct WaveResult {
+			float3 pos;
+			float3 normal;
+			float3 tangent;
+		};
+
 		float _WaterTime;
 
-		float3 getWavePos(float3 pos) {
-			float amplitude = 5.0;
-			float waveLength = 10.0;
-			float speed = 1.0;
+		WaveResult getWaveResult(float3 pos) {
+			float amplitude = 1.0;
+			float waveLength = 4.0;
+			float speed = 3.0;
 			float2 direction = float2(-1.0, 0.0);
 			float frequency = 2.0 / waveLength;
 			float phaseConstant = speed * frequency;
 			float constant = dot(direction, float2(pos.x, pos.z)) * frequency + _WaterTime * phaseConstant;
+
+			float wa = frequency * amplitude;
+			float s = sin(constant);
+			float c = cos(constant);
+			float q = 0.0f;
+
+			float3 tangent = float3(0.0, direction.y * wa * c, 1.0);
+			float3 normal = float3(-direction.x * wa * c, 1.0, -direction.y * wa * c);
+
 			pos.y = amplitude * sin(constant);
-			return pos;
+			WaveResult result;
+			result.pos = pos;
+			result.normal = normal;
+			result.tangent = tangent;
+			//Tangent must have (0, bla (right), 1)
+			//Bi must have (1, bla (right), 0)
+
+
+			return result;
 		}
 
-		void vert(inout appdata_full IN) {
+		void vert(inout appdata_base IN) {
 			//Get the global position of the vertex
 			float4 worldPos = mul(unity_ObjectToWorld, IN.vertex);
 
 			//Manipulate the position
 			
-			float3 withWave = getWavePos(worldPos.xyz);
+			WaveResult result = getWaveResult(worldPos.xyz);
+
+			float3 withWave = result.pos;
 
 			//Convert the position back to local
 			float4 localPos = mul(unity_WorldToObject, float4(withWave, worldPos.w));
 
 			//Assign the modified vertex
 			IN.vertex = localPos;
+			IN.normal = result.normal;
+			//IN.tangent = float4(result.tangent, 0);
 		}
 
 		void surf (Input IN, inout SurfaceOutputStandard o) {
