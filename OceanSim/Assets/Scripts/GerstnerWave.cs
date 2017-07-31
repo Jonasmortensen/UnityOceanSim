@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GerstnerWave : MonoBehaviour, IWave {
 
-    public float WaveLength = 4.0f;
+    public float WaveLength = 10.0f;
     public float Speed = 1.0f;
     public float Amplitude = 1.0f;
     public Vector2 Direction = Vector2.left;
@@ -29,7 +29,9 @@ public class GerstnerWave : MonoBehaviour, IWave {
         _frequency = 2 / WaveLength;
         Speed = Mathf.Sqrt(9.8f * ((2 * Mathf.PI) / WaveLength));
         _phaseConstant = Speed * _frequency;
-        _q = 0.5f / (_frequency * Amplitude);
+        _q = 1.0f / (_frequency * Amplitude * 3);
+
+        Debug.Log("Set speed = " + Speed);
     }
 
     // Use this for initialization
