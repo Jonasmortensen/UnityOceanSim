@@ -8,6 +8,7 @@ public class OceanController : MonoBehaviour {
     public float Amplitude;
     public float WaveLength;
     public float Speed;
+    public bool UseWaterDispertionAsSpeed;
     [Range(0.0f, 1.0f)]
     public float Steepness;
     public Transform Direction;
@@ -34,7 +35,11 @@ public class OceanController : MonoBehaviour {
         var frequency = 2.0f / WaveLength;
         Shader.SetGlobalFloat("_Q", Steepness/(frequency*Amplitude*WaveCount));
         Shader.SetGlobalFloat("_Frequency", frequency);
-        Shader.SetGlobalFloat("_PhaseConstant", frequency * Speed);
+        if (UseWaterDispertionAsSpeed) {
+            Shader.SetGlobalFloat("_PhaseConstant", frequency * Mathf.Sqrt(9.8f * ((2 * Mathf.PI) / WaveLength)));
+        } else {
+            Shader.SetGlobalFloat("_PhaseConstant", frequency * Speed);
+        }
     }
 
 
