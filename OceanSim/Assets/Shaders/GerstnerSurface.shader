@@ -1,6 +1,4 @@
-﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
-
-Shader "Custom/ShaderTest1" {
+﻿Shader "Custom/GerstnerSurface" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
@@ -24,7 +22,6 @@ Shader "Custom/ShaderTest1" {
 			float2 uv_MainTex;
 		};
 
-
 		half _Glossiness;
 		half _Metallic;
 		fixed4 _Color;
@@ -36,37 +33,44 @@ Shader "Custom/ShaderTest1" {
 			// put more per-instance properties here
 		UNITY_INSTANCING_CBUFFER_END
 
+		float _WaveTime;
+		float _Amplitude;
+		float _DirectionX;
+		float _DirectionZ;
+		float _Q;
+		float _Frequency;
+		float _PhaseConstant;
+
 		struct WaveResult {
 			float3 pos;
 			float3 normal;
 		};
 
-		float _WaterTime;
-
 		WaveResult getWaveResult(float3 pos) {
-			float amplitude = 1.0;
-			float waveLength = 4.0;
-			float speed = 3.0;
-			float2 direction = float2(-1.0, 0.0);
-			float frequency = 2.0 / waveLength;
-			float phaseConstant = speed * frequency;
-			float constant = dot(direction, float2(pos.x, pos.z)) * frequency + _WaterTime * phaseConstant;
+			//float amplitude = 1.0;
+			//float waveLength = 4.0;
+			//float speed = 3.0;
+			//float2 direction = float2(-1.0, 0.0);
+			//float frequency = 2.0 / waveLength;
+			//float phaseConstant = speed * frequency;
+			float2 direction = float2(_DirectionX, _DirectionZ);
+			float constant = dot(direction, float2(pos.x, pos.z)) * _Frequency + _WaveTime * _PhaseConstant;
 
-			float wa = frequency * amplitude;
+			float wa = _Frequency * _Amplitude;
 			float s = sin(constant);
 			float c = cos(constant);
-			float q = 1.7;
+			//float q = 1.7;
 
-			float3 wavedPos =	
+			float3 wavedPos =
 				float3(
-					pos.x + q * amplitude * direction.x * c,
-					amplitude * s,
-					pos.z + q * amplitude * direction.y * c	
-				);
+					pos.x + _Q * _Amplitude * direction.x * c,
+					_Amplitude * s,
+					pos.z + _Q * _Amplitude * direction.y * c
+					);
 
-			float3 normal = float3(-direction.x * wa * c, 1 - q * wa * s, -direction.y * wa * c);
+			float3 normal = float3(-direction.x * wa * c, 1 - _Q * wa * s, -direction.y * wa * c);
 
-			pos.y = amplitude * sin(constant);
+			pos.y = _Amplitude * sin(constant);
 			WaveResult result;
 			result.pos = wavedPos;
 			result.normal = normal;
@@ -80,7 +84,7 @@ Shader "Custom/ShaderTest1" {
 			float4 worldPos = mul(unity_ObjectToWorld, IN.vertex);
 
 			//Manipulate the position
-			
+
 			WaveResult result = getWaveResult(worldPos.xyz);
 
 			float3 withWave = result.pos;
@@ -91,7 +95,6 @@ Shader "Custom/ShaderTest1" {
 			//Assign the modified vertex
 			IN.vertex = localPos;
 			IN.normal = result.normal;
-			//IN.tangent = float4(result.tangent, 0);
 		}
 
 		void surf (Input IN, inout SurfaceOutputStandard o) {
