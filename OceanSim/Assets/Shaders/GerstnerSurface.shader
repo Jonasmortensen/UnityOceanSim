@@ -36,12 +36,12 @@
 
 		int _WaveCount;
 		float _WaveTime;
-		float _Amplitude;
+		float _Amplitude[20];
 		float _DirectionX[20];
 		float _DirectionZ[20];
-		float _Q;
-		float _Frequency;
-		float _PhaseConstant;
+		float _Q[20];
+		float _Frequency[20];
+		float _PhaseConstant[20];
 
 		struct WaveResult {
 			float3 pos;
@@ -50,39 +50,39 @@
 		};
 
 		WaveResult getWaveResult(float3 pos) {
-			float3 posSum = float3(pos.x, 0.0, pos.z);
-			float3 normalSum = float3(0.0, 0.0, 0.0);
+			float3 wavePosition = float3(pos.x, 0.0, pos.z);
+			float3 waveNormal = float3(0.0, 1.0, 0.0);
 
 			for (int i = 0; i < _WaveCount; i++) {
 				float2 direction = float2(_DirectionX[i], _DirectionZ[i]);
-				float constant = dot(direction, float2(pos.x, pos.z)) * _Frequency + _WaveTime * _PhaseConstant;
-				float wa = _Frequency * _Amplitude;
+				float constant = dot(direction, float2(pos.x, pos.z)) * _Frequency[i] + _WaveTime * _PhaseConstant[i];
+				float wa = _Frequency[i] * _Amplitude[i];
 				float s = sin(constant);
 				float c = cos(constant);
 
 				float3 iWavePos =
 					float3(
-						_Q * _Amplitude * direction.x * c,
-						_Amplitude * s,
-						_Q * _Amplitude * direction.y * c
+						_Q[i] * _Amplitude[i] * direction.x * c,
+						_Amplitude[i] * s,
+						_Q[i] * _Amplitude[i] * direction.y * c
 						);
 
 				float3 iNormal = 
 					float3(
 						direction.x * wa * c, 
-						_Q * wa * s, 
+						_Q[i] * wa * s, 
 						direction.y * wa * c
 						);
 
-				posSum += iWavePos;
-				normalSum += iNormal;
+				wavePosition += iWavePos;
+				waveNormal -= iNormal;
 
 			}
 
 
 			WaveResult result;
-			result.pos = posSum;// +float3(pos.x, 0.0, pos.z);
-			result.normal = float3(-normalSum.x, 1 - normalSum.y, -normalSum.z);
+			result.pos = wavePosition;
+			result.normal = waveNormal;
 
 
 			return result;
