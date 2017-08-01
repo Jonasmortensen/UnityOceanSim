@@ -20,6 +20,7 @@
 
 		struct Input {
 			float2 uv_MainTex;
+			float3 worldPos;
 		};
 
 		half _Glossiness;
@@ -30,13 +31,14 @@
 		// See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
 		// #pragma instancing_options assumeuniformscaling
 		UNITY_INSTANCING_CBUFFER_START(Props)
-			// put more per-instance properties here
+		// put more per-instance properties here
 		UNITY_INSTANCING_CBUFFER_END
 
+		int _WaveCount;
 		float _WaveTime;
 		float _Amplitude;
-		float _DirectionX;
-		float _DirectionZ;
+		float _DirectionX[20];
+		float _DirectionZ[20];
 		float _Q;
 		float _Frequency;
 		float _PhaseConstant;
@@ -44,36 +46,43 @@
 		struct WaveResult {
 			float3 pos;
 			float3 normal;
+			float2 uv;
 		};
 
 		WaveResult getWaveResult(float3 pos) {
-			//float amplitude = 1.0;
-			//float waveLength = 4.0;
-			//float speed = 3.0;
-			//float2 direction = float2(-1.0, 0.0);
-			//float frequency = 2.0 / waveLength;
-			//float phaseConstant = speed * frequency;
-			float2 direction = float2(_DirectionX, _DirectionZ);
-			float constant = dot(direction, float2(pos.x, pos.z)) * _Frequency + _WaveTime * _PhaseConstant;
+			float3 posSum = float3(pos.x, 0.0, pos.z);
+			float3 normalSum = float3(0.0, 0.0, 0.0);
 
-			float wa = _Frequency * _Amplitude;
-			float s = sin(constant);
-			float c = cos(constant);
-			//float q = 1.7;
+			for (int i = 0; i < _WaveCount; i++) {
+				float2 direction = float2(_DirectionX[i], _DirectionZ[i]);
+				float constant = dot(direction, float2(pos.x, pos.z)) * _Frequency + _WaveTime * _PhaseConstant;
+				float wa = _Frequency * _Amplitude;
+				float s = sin(constant);
+				float c = cos(constant);
 
-			float3 wavedPos =
-				float3(
-					pos.x + _Q * _Amplitude * direction.x * c,
-					_Amplitude * s,
-					pos.z + _Q * _Amplitude * direction.y * c
-					);
+				float3 iWavePos =
+					float3(
+						_Q * _Amplitude * direction.x * c,
+						_Amplitude * s,
+						_Q * _Amplitude * direction.y * c
+						);
 
-			float3 normal = float3(-direction.x * wa * c, 1 - _Q * wa * s, -direction.y * wa * c);
+				float3 iNormal = 
+					float3(
+						direction.x * wa * c, 
+						_Q * wa * s, 
+						direction.y * wa * c
+						);
 
-			pos.y = _Amplitude * sin(constant);
+				posSum += iWavePos;
+				normalSum += iNormal;
+
+			}
+
+
 			WaveResult result;
-			result.pos = wavedPos;
-			result.normal = normal;
+			result.pos = posSum;// +float3(pos.x, 0.0, pos.z);
+			result.normal = float3(-normalSum.x, 1 - normalSum.y, -normalSum.z);
 
 
 			return result;
@@ -95,10 +104,14 @@
 			//Assign the modified vertex
 			IN.vertex = localPos;
 			IN.normal = result.normal;
+			//World tiling
+			IN.texcoord = float4(-worldPos.z, worldPos.x, 0.0, 0.0) / 20;
 		}
 
 		void surf (Input IN, inout SurfaceOutputStandard o) {
 			// Albedo comes from a texture tinted by color
+
+
 			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
 			o.Albedo = c.rgb;
 			// Metallic and smoothness come from slider variables
