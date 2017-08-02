@@ -1,7 +1,7 @@
 ﻿Shader "Custom/GerstnerSurface" {
 	Properties {
-		_LowColor ("Low Color", Color) = (1,1,1,1)
 		_HighColor ("High Color", Color) = (1,1,1,1)
+		_LowColor ("Low Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
 		_BumpMap("Bumpmap", 2D) = "bump" {}
 		_BumpIntensity("Bumpmap intensity", Range(-2,2)) = 1.0
@@ -9,11 +9,12 @@
 		_Metallic ("Metallic", Range(0,1)) = 0.0
 	}
 	SubShader {
-		Tags { "RenderType"="Opaque" }
+		Tags {"RenderType"="Opaque" }
 		LOD 200
 		
 		CGPROGRAM
 		// Physically based Standard lighting model, and enable shadows on all light types
+		//#pragma surface surf Standard vertex:vert addshadow
 		#pragma surface surf Standard vertex:vert addshadow
 
 		// Use shader model 3.0 target, to get nicer looking lighting
@@ -129,7 +130,7 @@
 			// Metallic and smoothness come from slider variables
 			o.Metallic = _Metallic;
 			o.Smoothness = _Glossiness;
-			o.Alpha = c.a;
+			o.Alpha = 1.0f;
 			o.Normal = lerp(UnpackNormal(tex2D(_BumpMap, IN.uv_BumpMap)), fixed3(0, 0, 1), -_BumpIntensity + 1);
 		}
 		ENDCG
