@@ -27,7 +27,6 @@ public class OceanController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-
         //Vector3 windDirection = Direction.forward.normalized;
 
         float[] directionXs = new float[WAVEBUFFER];

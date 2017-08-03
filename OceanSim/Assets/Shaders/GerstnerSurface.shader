@@ -97,13 +97,13 @@
 		}
 
 		void vert(inout appdata_full IN) {
-			//Get the global position of the vertex
 			float4 pos = IN.vertex;
+			//Get the global position of the vertex
 			float4 worldPos = mul(unity_ObjectToWorld, pos);
 
 			//Manipulate the position
 
-			WaveResult result = getWaveResult(worldPos.xyz);
+			WaveResult result = getWaveResult(float3(worldPos.x, pos.y, worldPos.z));
 
 			float3 withWave = result.pos;
 
@@ -111,7 +111,7 @@
 			float4 localPos = mul(unity_WorldToObject, float4(withWave, worldPos.w));
 
 			//Assign the modified vertex
-			IN.vertex = localPos;
+			IN.vertex = float4(localPos.x, withWave.y, localPos.z, localPos.w);
 			IN.normal = result.normal;
 			//World tiling
 			IN.texcoord = float4(-worldPos.z, worldPos.x, 0.0, 0.0) / 20;
