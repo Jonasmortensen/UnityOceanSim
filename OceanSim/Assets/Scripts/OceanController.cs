@@ -5,16 +5,17 @@ using UnityEngine;
 public class OceanController : MonoBehaviour {
     //[Range(0, 20)]
     //public int WaveCount;
-    public Wave[] waves;
+    private Wave[] waves;
 
-    public float Amplitude;
-    public float WaveLength;
-    public float Speed;
+    //public float Amplitude;
+    //public float WaveLength;
+    //public float Speed;
     public bool UseWaterDispertionAsSpeed;
-    [Range(0.0f, 1.0f)]
-    public float Steepness;
-    public Transform Direction;
+    //[Range(0.0f, 1.0f)]
+    //public float Steepness;
+    //public Transform Direction;
 
+    //This is determined by the shader
     private const int WAVEBUFFER = 20;
 
 	// Use this for initialization
@@ -27,7 +28,7 @@ public class OceanController : MonoBehaviour {
 	void Update () {
 
 
-        Vector3 windDirection = Direction.forward.normalized;
+        //Vector3 windDirection = Direction.forward.normalized;
 
         float[] directionXs = new float[WAVEBUFFER];
         float[] directionZs = new float[WAVEBUFFER];
@@ -49,7 +50,8 @@ public class OceanController : MonoBehaviour {
                 Qs[i] = currentWave.Steepness / (frequency * currentWave.Amplitude * waves.Length);
             }
             if (UseWaterDispertionAsSpeed) {
-                phaseConstants[i] = frequency * Mathf.Sqrt(9.8f * ((2 * Mathf.PI) / WaveLength));
+                //phaseConstants[i] = frequency * Mathf.Sqrt(9.8f * ((2 * Mathf.PI) / waves[0].WaveLength));
+                phaseConstants[i] = frequency * Mathf.Sqrt(9.8f * ((2 * Mathf.PI) / currentWave.WaveLength));
             } else {
                 phaseConstants[i] = frequency * currentWave.Speed;
             }

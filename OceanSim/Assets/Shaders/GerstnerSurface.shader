@@ -98,7 +98,8 @@
 
 		void vert(inout appdata_full IN) {
 			//Get the global position of the vertex
-			float4 worldPos = mul(unity_ObjectToWorld, IN.vertex);
+			float4 pos = IN.vertex;
+			float4 worldPos = mul(unity_ObjectToWorld, pos);
 
 			//Manipulate the position
 
