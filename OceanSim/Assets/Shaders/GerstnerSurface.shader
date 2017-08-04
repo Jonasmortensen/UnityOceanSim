@@ -1,7 +1,9 @@
 ﻿Shader "Custom/GerstnerSurface" {
 	Properties {
 		_HighColor ("High Color", Color) = (1,1,1,1)
+		_HighColorHeight("High Color Height", Float) = 5.0
 		_LowColor ("Low Color", Color) = (1,1,1,1)
+		_LowColorHeight("Low Color Height", Float) = -1.0
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
 		_BumpMap("Bumpmap", 2D) = "bump" {}
 		_BumpIntensity("Bumpmap intensity", Range(-2,2)) = 1.0
@@ -10,6 +12,8 @@
 	}
 	SubShader {
 		Tags {"RenderType"="Opaque" }
+
+
 		LOD 200
 		
 		CGPROGRAM
@@ -29,11 +33,14 @@
 			float3 worldPos;
 		};
 
+		//Used by surf function
 		half _Glossiness;
 		half _Metallic;
 		half _BumpIntensity;
 		fixed4 _LowColor;
 		fixed4 _HighColor;
+		float _LowColorHeight;
+		float _HighColorHeight;
 
 		// Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
 		// See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -42,6 +49,7 @@
 		// put more per-instance properties here
 		UNITY_INSTANCING_CBUFFER_END
 
+		//Used by vert function
 		int _WaveCount;
 		float _WaveTime;
 		float _Amplitude[20];
@@ -119,11 +127,11 @@
 
 		void surf (Input IN, inout SurfaceOutputStandard o) {
 			// Albedo comes from a texture tinted by color
-			float lowPos = -1.0;
-			float height = 5.0;
-			float heightSaturation = IN.worldPos.y - lowPos / height;
+			//float lowPos = -1.0;
+			float height = _HighColorHeight - _LowColorHeight;
+			float heightSaturation = (IN.worldPos.y - _LowColorHeight) / height;
 
-			fixed4 gradC = lerp(_LowColor, _HighColor, heightSaturation);
+			fixed4 gradC = lerp(_LowColor, _HighColor, clamp(heightSaturation, 0.0, 1.0));
 
 
 			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * gradC;
@@ -131,7 +139,7 @@
 			// Metallic and smoothness come from slider variables
 			o.Metallic = _Metallic;
 			o.Smoothness = _Glossiness;
-			o.Alpha = 1.0f;
+			o.Alpha = 0.8f;
 			o.Normal = lerp(UnpackNormal(tex2D(_BumpMap, IN.uv_BumpMap)), fixed3(0, 0, 1), -_BumpIntensity + 1);
 		}
 		ENDCG
