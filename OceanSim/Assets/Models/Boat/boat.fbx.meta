@@ -1,0 +1,154 @@
+fileFormatVersion: 2
+guid: ed8635afc87221046b0df52c6693c58e
+timeCreated: 1502023622
+licenseType: Free
+ModelImporter:
+  serializedVersion: 21
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: boom
+    100004: jib
+    100006: lamp
+    100008: mainsaill
+    100010: mast
+    100012: mast2
+    100014: Plane
+    100016: Plane.001
+    100018: rudder
+    100020: ship
+    100022: staysail
+    100024: staysail b
+    100026: topsail
+    100028: upper mast
+    400000: //RootNode
+    400002: boom
+    400004: jib
+    400006: lamp
+    400008: mainsaill
+    400010: mast
+    400012: mast2
+    400014: Plane
+    400016: Plane.001
+    400018: rudder
+    400020: ship
+    400022: staysail
+    400024: staysail b
+    400026: topsail
+    400028: upper mast
+    2300000: boom
+    2300002: jib
+    2300004: lamp
+    2300006: mainsaill
+    2300008: mast
+    2300010: mast2
+    2300012: Plane
+    2300014: Plane.001
+    2300016: rudder
+    2300018: ship
+    2300020: staysail
+    2300022: staysail b
+    2300024: topsail
+    2300026: upper mast
+    3300000: boom
+    3300002: jib
+    3300004: lamp
+    3300006: mainsaill
+    3300008: mast
+    3300010: mast2
+    3300012: Plane
+    3300014: Plane.001
+    3300016: rudder
+    3300018: ship
+    3300020: staysail
+    3300022: staysail b
+    3300024: topsail
+    3300026: upper mast
+    4300000: Plane
+    4300002: Plane.001
+    4300004: upper mast
+    4300006: staysail b
+    4300008: mast2
+    4300010: mast
+    4300012: boom
+    4300014: topsail
+    4300016: staysail
+    4300018: mainsaill
+    4300020: jib
+    4300022: ship
+    4300024: rudder
+    4300026: lamp
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

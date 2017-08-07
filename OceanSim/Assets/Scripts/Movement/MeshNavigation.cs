@@ -15,28 +15,24 @@ public class MeshNavigation : MonoBehaviour {
     public CharacterState state;
     public Animator animator;
 
+    private Vector3 prevPosition;
+
 	// Use this for initialization
 	void Start () {
         cam = Camera.main;
         agent = GetComponent<NavMeshAgent>();
+        agent.updateRotation = false;
         state = CharacterState.IDLE;
+
     }
 	
 	// Update is called once per frame
 	void Update () {
-        float dist=agent.remainingDistance;
-        if (agent.pathStatus==NavMeshPathStatus.PathComplete && agent.remainingDistance == 0) {
-            if(state == CharacterState.MOVING) {
-                Debug.Log("Stopped walking");
-                animator.SetBool("Walking", false);
-            }
-            state = CharacterState.IDLE;
-        } else {
-            if(state == CharacterState.IDLE) {
-                Debug.Log("Started walking");
-                animator.SetBool("Walking", true);
-            }
-            state = CharacterState.MOVING;
+        UpdateState();
+        if (state == CharacterState.MOVING) {
+            animator.SetFloat("Speed", getVelocity());
+            Vector3 nextPoint = agent.path.corners[1];
+            transform.rotation = Quaternion.LookRotation(new Vector3(nextPoint.x, transform.position.y, nextPoint.z) - transform.position);
         }
 
         if (Input.GetKeyDown(KeyCode.Mouse0)) {
@@ -48,5 +44,29 @@ public class MeshNavigation : MonoBehaviour {
                 agent.SetDestination(hit.point);
             }
         }
+
+        prevPosition = transform.position;
 	}
+
+    private float getVelocity() {
+        float velocity = ((transform.position - prevPosition).magnitude / Time.deltaTime / agent.speed) * 2;
+        Debug.Log("Velocity is: " + velocity);
+        return velocity;
+    }
+
+    private void UpdateState() {
+        float dist = agent.remainingDistance;
+        if (agent.pathStatus == NavMeshPathStatus.PathComplete && agent.remainingDistance == 0) {
+            if (state == CharacterState.MOVING) {
+                animator.SetBool("Walking", false);
+            }
+            state = CharacterState.IDLE;
+        }
+        else {
+            if (state == CharacterState.IDLE) {
+                animator.SetBool("Walking", true);
+            }
+            state = CharacterState.MOVING;
+        }
+    }
 }
