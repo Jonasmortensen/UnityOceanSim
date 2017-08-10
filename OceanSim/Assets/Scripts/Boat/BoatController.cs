@@ -5,10 +5,13 @@ using UnityEngine;
 
 public class BoatController : MonoBehaviour, IListener, ILeftAnalogListener, IRightAnalogListener, IButtonDownListener {
     public float mastRotationSpeed;
+    public float rudderRotationSpeed;
     public Transform windDirection;
     public float windSpeed;
+    public float sailSize;
 
     private Vector3 windVector;
+    private Rigidbody rb;
 
     private Transform Mast;
     private Transform Rudder;
@@ -16,6 +19,7 @@ public class BoatController : MonoBehaviour, IListener, ILeftAnalogListener, IRi
 
     // Use this for initialization
     void Start() {
+        rb = GetComponent<Rigidbody>();
 
         Mast = transform.Find("MastControl");
         Rudder = transform.Find("RudderControl");
@@ -25,16 +29,35 @@ public class BoatController : MonoBehaviour, IListener, ILeftAnalogListener, IRi
     }
 
     // Update is called once per frame
-    void Update() {
+    void FixedUpdate() {
         ApplyWindOnSail();
 
     }
 
     public void ApplyWindOnSail() {
         Vector3 sailDirection = Mast.right;
-        Vector3 sailForce = Vector3.Project(windVector, sailDirection);
+        Vector3 horizontalVelocity = new Vector3(rb.velocity.x, 0.0f, rb.velocity.z);
+        Vector3 relativeWind = (windDirection.forward * windSpeed) - horizontalVelocity;
+        
 
-        Debug.Log(sailForce);
+        float sailEffeciency = Vector3.Dot(relativeWind.normalized, sailDirection);
+
+        Vector3 sailForce = sailDirection * sailEffeciency * sailSize;
+        Vector3 boatForce = Vector3.Project(sailForce, transform.forward);
+
+        rb.AddForce(boatForce);
+
+        //For debuggin
+        Vector3 lineStart = new Vector3(transform.position.x - 15, transform.position.y + 5, transform.position.z + 5);
+
+        Debug.DrawLine(lineStart, lineStart + (sailForce / sailSize) * 5, Color.blue);
+        Debug.DrawLine(lineStart, lineStart + (boatForce / sailSize) * 5, Color.red);
+        Debug.DrawLine(lineStart, lineStart - (relativeWind / windSpeed) * 5, Color.green);
+
+    }
+
+    public float getSpeed() {
+        return Vector3.Project(rb.velocity, transform.forward).magnitude;
     }
 
     public void Cirkel_down() {
@@ -42,7 +65,7 @@ public class BoatController : MonoBehaviour, IListener, ILeftAnalogListener, IRi
     }
 
     public void LeftAnalogPosition(float x, float y) {
-        Rudder.Rotate(Vector3.up, -x, Space.Self);
+        Rudder.Rotate(Vector3.up, -x * rudderRotationSpeed, Space.Self);
     }
 
     public void LeftAnalog_down() {
