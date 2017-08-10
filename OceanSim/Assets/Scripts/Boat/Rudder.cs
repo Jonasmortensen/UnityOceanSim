@@ -1,22 +1,17 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rudder : MonoBehaviour {
+public class Rudder : MonoBehaviour, ILeftAnalogListener {
 
     public Transform forcePoint;
     public float rotationSpeed;
 
     private float rotation;
 
-	// Use this for initialization
 	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+        InputHandler.Instance.LeftAnalogListener = this;
 	}
 
     public Vector3 getRudderDirection() {
@@ -35,5 +30,13 @@ public class Rudder : MonoBehaviour {
 
     public void resetRotation() {
         rotate(-rotation);
+    }
+
+    public void LeftAnalogPosition(float x, float y) {
+        rotate(-x * rotationSpeed);
+    }
+
+    public void LeftAnalog_down() {
+        resetRotation();
     }
 }

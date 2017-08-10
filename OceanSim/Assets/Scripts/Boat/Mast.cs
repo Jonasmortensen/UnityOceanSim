@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 
-public class Mast : MonoBehaviour {
+public class Mast : MonoBehaviour, IRightAnalogListener {
 
     public float SailSize;
     public float rotationSpeed;
 
     private float rotation;
+
+    void Start() {
+        InputHandler.Instance.RightAnalogListener = this;
+    }
 
     public Vector3 getSailForce(Vector3 windOnSail) {
         Vector3 sailDirection = transform.right;
@@ -18,12 +22,20 @@ public class Mast : MonoBehaviour {
         return sailDirection * sailEffeciency * SailSize * windOnSail.magnitude;
     }
 
-    public void rotate(float degrees) {
+    private void rotate(float degrees) {
         transform.Rotate(Vector3.up, degrees);
         rotation += degrees;
     }
 
-    public void resetRotation() {
+    private void resetRotation() {
         rotate(-rotation);
+    }
+
+    public void RightAnalogPosition(float x, float y) {
+        rotate(-x * rotationSpeed);
+    }
+
+    public void RightAnalog_down() {
+        resetRotation();
     }
 }

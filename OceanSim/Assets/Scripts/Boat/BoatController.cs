@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BoatController : MonoBehaviour, IListener, ILeftAnalogListener, IRightAnalogListener, IButtonDownListener {
+public class BoatController : MonoBehaviour, IListener, IButtonDownListener {
     public Wind wind;
     public Mast mast;
     public Rudder rudder;
@@ -13,8 +13,6 @@ public class BoatController : MonoBehaviour, IListener, ILeftAnalogListener, IRi
     // Use this for initialization
     void Start() {
         rb = GetComponent<Rigidbody>();
-
-        InputHandler.Instance.SetListenersOrNull(this);
     }
 
     // Update is called once per frame
@@ -53,22 +51,6 @@ public class BoatController : MonoBehaviour, IListener, ILeftAnalogListener, IRi
 
     public void Cirkel_down() {
         throw new NotImplementedException();
-    }
-
-    public void LeftAnalogPosition(float x, float y) {
-        rudder.rotate(-x * rudder.rotationSpeed);
-    }
-
-    public void LeftAnalog_down() {
-        rudder.resetRotation();
-    }
-
-    public void RightAnalogPosition(float x, float y) {
-        mast.rotate(-x * mast.rotationSpeed);
-    }
-
-    public void RightAnalog_down() {
-        mast.resetRotation();
     }
 
     public void Square_down() {
