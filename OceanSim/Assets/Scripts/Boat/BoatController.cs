@@ -15,6 +15,7 @@ public class BoatController : MonoBehaviour, IListener, ILeftAnalogListener, IRi
 
     private Transform Mast;
     private Transform Rudder;
+    private Transform RudderForcePoint;
 
 
     // Use this for initialization
@@ -23,6 +24,7 @@ public class BoatController : MonoBehaviour, IListener, ILeftAnalogListener, IRi
 
         Mast = transform.Find("MastControl");
         Rudder = transform.Find("RudderControl");
+        RudderForcePoint = transform.Find("RudderForcePoint");
         windVector = windDirection.forward * windSpeed;
 
         InputHandler.Instance.SetListenersOrNull(this);
@@ -35,6 +37,8 @@ public class BoatController : MonoBehaviour, IListener, ILeftAnalogListener, IRi
     }
 
     public void ApplyWindOnSail() {
+
+        //Force on boat from sail
         Vector3 sailDirection = Mast.right;
         Vector3 horizontalVelocity = new Vector3(rb.velocity.x, 0.0f, rb.velocity.z);
         Vector3 relativeWind = (windDirection.forward * windSpeed) - horizontalVelocity;
@@ -42,10 +46,15 @@ public class BoatController : MonoBehaviour, IListener, ILeftAnalogListener, IRi
 
         float sailEffeciency = Vector3.Dot(relativeWind.normalized, sailDirection);
 
-        Vector3 sailForce = sailDirection * sailEffeciency * sailSize;
+        Vector3 sailForce = sailDirection * sailEffeciency * sailSize * relativeWind.magnitude;
         Vector3 boatForce = Vector3.Project(sailForce, transform.forward);
 
         rb.AddForce(boatForce);
+
+        Debug.Log("Magnitude of force on boat: " + boatForce.magnitude);
+
+        //Force from rudder in water
+        rb.AddForceAtPosition(RudderForcePoint.forward * Vector3.Dot(RudderForcePoint.forward, transform.forward) * horizontalVelocity.magnitude, RudderForcePoint.position);
 
         //For debuggin
         Vector3 lineStart = new Vector3(transform.position.x - 15, transform.position.y + 5, transform.position.z + 5);
@@ -53,7 +62,7 @@ public class BoatController : MonoBehaviour, IListener, ILeftAnalogListener, IRi
         Debug.DrawLine(lineStart, lineStart + (sailForce / sailSize) * 5, Color.blue);
         Debug.DrawLine(lineStart, lineStart + (boatForce / sailSize) * 5, Color.red);
         Debug.DrawLine(lineStart, lineStart - (relativeWind / windSpeed) * 5, Color.green);
-
+        //End debugging
     }
 
     public float getSpeed() {
@@ -66,6 +75,7 @@ public class BoatController : MonoBehaviour, IListener, ILeftAnalogListener, IRi
 
     public void LeftAnalogPosition(float x, float y) {
         Rudder.Rotate(Vector3.up, -x * rudderRotationSpeed, Space.Self);
+        RudderForcePoint.Rotate(Vector3.up, -x * rudderRotationSpeed, Space.Self);
     }
 
     public void LeftAnalog_down() {

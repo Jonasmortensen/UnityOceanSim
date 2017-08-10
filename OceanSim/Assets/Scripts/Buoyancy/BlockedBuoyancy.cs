@@ -16,7 +16,7 @@ public class BlockedBuoyancy : MonoBehaviour {
 
     private Vector3 prBlockBuoyuancyForce;
     private float prBlockDragMultiplyer;
-    private float viscosity = 1.0f;
+    private float viscosity = 2.0f;
 
 	// Use this for initialization
 	void Start () {
