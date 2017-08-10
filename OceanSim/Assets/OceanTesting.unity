@@ -273,6 +273,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SailSize: 30
+  rotationSpeed: 1
 --- !u!1 &29594316
 GameObject:
   m_ObjectHideFlags: 0
@@ -2684,10 +2685,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6d1a345cc4b96b4f83e41a00729b832, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mastRotationSpeed: 1
-  rudderRotationSpeed: 1
   wind: {fileID: 202126743}
   mast: {fileID: 23587367}
+  rudder: {fileID: 1587758573}
 --- !u!114 &1047455452
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3236,6 +3236,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1587758572}
+  - component: {fileID: 1587758573}
   m_Layer: 0
   m_Name: RudderControl
   m_TagString: Untagged
@@ -3257,6 +3258,19 @@ Transform:
   m_Father: {fileID: 980198305}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: -41.578003, y: 0.21800001, z: -0.14400001}
+--- !u!114 &1587758573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1587758571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed0791401eb05ac4bb0e4d9b60c0bb5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  forcePoint: {fileID: 1967457546}
+  rotationSpeed: 1
 --- !u!1 &1594681946
 GameObject:
   m_ObjectHideFlags: 0
