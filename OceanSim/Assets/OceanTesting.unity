@@ -235,6 +235,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 23587366}
+  - component: {fileID: 23587367}
   m_Layer: 0
   m_Name: MastControl
   m_TagString: Untagged
@@ -260,6 +261,18 @@ Transform:
   m_Father: {fileID: 980198305}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &23587367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 23587365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4dd30920d288574b8ceb51c83b01f3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SailSize: 30
 --- !u!1 &29594316
 GameObject:
   m_ObjectHideFlags: 0
@@ -776,8 +789,9 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 202126742}
+  - component: {fileID: 202126743}
   m_Layer: 0
-  m_Name: WindDirection
+  m_Name: Wind
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -796,6 +810,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &202126743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 202126741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12ce2d84a97ab094690bc427ef44ed16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windSpeed: 10
 --- !u!1 &225623443
 GameObject:
   m_ObjectHideFlags: 0
@@ -2660,9 +2686,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mastRotationSpeed: 1
   rudderRotationSpeed: 1
-  windDirection: {fileID: 202126742}
-  windSpeed: 20
-  sailSize: 30
+  wind: {fileID: 202126743}
+  mast: {fileID: 23587367}
 --- !u!114 &1047455452
 MonoBehaviour:
   m_ObjectHideFlags: 0

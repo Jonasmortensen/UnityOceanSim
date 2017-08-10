@@ -6,14 +6,18 @@ using UnityEngine;
 public class BoatController : MonoBehaviour, IListener, ILeftAnalogListener, IRightAnalogListener, IButtonDownListener {
     public float mastRotationSpeed;
     public float rudderRotationSpeed;
-    public Transform windDirection;
-    public float windSpeed;
-    public float sailSize;
+    //public Transform windDirection;
+    public Wind wind;
+    //public float windSpeed;
+    //public float sailSize;
 
-    private Vector3 windVector;
+    //private Vector3 windVector;
     private Rigidbody rb;
 
-    private Transform Mast;
+    public Mast mast;
+    //public Rudder rudder;
+
+    //private Transform Mast;
     private Transform Rudder;
     private Transform RudderForcePoint;
 
@@ -25,10 +29,10 @@ public class BoatController : MonoBehaviour, IListener, ILeftAnalogListener, IRi
     void Start() {
         rb = GetComponent<Rigidbody>();
 
-        Mast = transform.Find("MastControl");
+        //Mast = transform.Find("MastControl");
         Rudder = transform.Find("RudderControl");
         RudderForcePoint = transform.Find("RudderForcePoint");
-        windVector = windDirection.forward * windSpeed;
+        //windVector = windDirection.forward * windSpeed;
 
         InputHandler.Instance.SetListenersOrNull(this);
     }
@@ -42,14 +46,11 @@ public class BoatController : MonoBehaviour, IListener, ILeftAnalogListener, IRi
     public void ApplyWindOnSail() {
 
         //Force on boat from sail
-        Vector3 sailDirection = Mast.right;
+        //Vector3 sailDirection = mast.getSailDirection();
         Vector3 horizontalVelocity = new Vector3(rb.velocity.x, 0.0f, rb.velocity.z);
-        Vector3 relativeWind = (windDirection.forward * windSpeed) - horizontalVelocity;
-        
+        Vector3 relativeWind = wind.getWindVector() - horizontalVelocity;
 
-        float sailEffeciency = Vector3.Dot(relativeWind.normalized, sailDirection);
-
-        Vector3 sailForce = sailDirection * sailEffeciency * sailSize * relativeWind.magnitude;
+        Vector3 sailForce = mast.getSailForce(relativeWind);
         Vector3 boatForce = Vector3.Project(sailForce, transform.forward);
 
         rb.AddForce(boatForce);
@@ -62,9 +63,9 @@ public class BoatController : MonoBehaviour, IListener, ILeftAnalogListener, IRi
         //For debuggin
         Vector3 lineStart = new Vector3(transform.position.x - 15, transform.position.y + 5, transform.position.z + 5);
 
-        Debug.DrawLine(lineStart, lineStart + (sailForce / sailSize) * 5, Color.blue);
-        Debug.DrawLine(lineStart, lineStart + (boatForce / sailSize) * 5, Color.red);
-        Debug.DrawLine(lineStart, lineStart - (relativeWind / windSpeed) * 5, Color.green);
+        //Debug.DrawLine(lineStart, lineStart + (sailForce / sailSize) * 5, Color.blue);
+        //Debug.DrawLine(lineStart, lineStart + (boatForce / sailSize) * 5, Color.red);
+        //Debug.DrawLine(lineStart, lineStart - (relativeWind / windSpeed) * 5, Color.green);
         //End debugging
     }
 
@@ -91,12 +92,12 @@ public class BoatController : MonoBehaviour, IListener, ILeftAnalogListener, IRi
 
     public void RightAnalogPosition(float x, float y) {
         float rotation = -x * mastRotationSpeed;
-        Mast.Rotate(Vector3.up, rotation);
+        mast.transform.Rotate(Vector3.up, rotation);
         mastRotation += rotation;
     }
 
     public void RightAnalog_down() {
-        Mast.Rotate(Vector3.up, -mastRotation);
+        mast.transform.Rotate(Vector3.up, -mastRotation);
         mastRotation = 0;
     }
 
