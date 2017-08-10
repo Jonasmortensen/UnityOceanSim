@@ -17,6 +17,9 @@ public class BoatController : MonoBehaviour, IListener, ILeftAnalogListener, IRi
     private Transform Rudder;
     private Transform RudderForcePoint;
 
+    private float mastRotation;
+    private float rudderRotation;
+
 
     // Use this for initialization
     void Start() {
@@ -74,20 +77,27 @@ public class BoatController : MonoBehaviour, IListener, ILeftAnalogListener, IRi
     }
 
     public void LeftAnalogPosition(float x, float y) {
-        Rudder.Rotate(Vector3.up, -x * rudderRotationSpeed, Space.Self);
-        RudderForcePoint.Rotate(Vector3.up, -x * rudderRotationSpeed, Space.Self);
+        float rotation = -x * rudderRotationSpeed;
+        Rudder.Rotate(Vector3.up, rotation, Space.Self);
+        RudderForcePoint.Rotate(Vector3.up, rotation, Space.Self);
+        rudderRotation += rotation;
     }
 
     public void LeftAnalog_down() {
-        throw new NotImplementedException();
+        Rudder.Rotate(Vector3.up, -rudderRotation, Space.Self);
+        RudderForcePoint.Rotate(Vector3.up, -rudderRotation, Space.Self);
+        rudderRotation = 0;
     }
 
     public void RightAnalogPosition(float x, float y) {
-        Mast.Rotate(Vector3.up, -x * mastRotationSpeed);
+        float rotation = -x * mastRotationSpeed;
+        Mast.Rotate(Vector3.up, rotation);
+        mastRotation += rotation;
     }
 
     public void RightAnalog_down() {
-        throw new NotImplementedException();
+        Mast.Rotate(Vector3.up, -mastRotation);
+        mastRotation = 0;
     }
 
     public void Square_down() {
