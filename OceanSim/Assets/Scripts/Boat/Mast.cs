@@ -6,16 +6,9 @@ using UnityEngine;
 public class Mast : MonoBehaviour {
 
     public float SailSize;
+    public float rotationSpeed;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    private float rotation;
 
     public Vector3 getSailForce(Vector3 windOnSail) {
         Vector3 sailDirection = transform.right;
@@ -23,5 +16,14 @@ public class Mast : MonoBehaviour {
         float sailEffeciency = Vector3.Dot(windOnSail.normalized, sailDirection);
 
         return sailDirection * sailEffeciency * SailSize * windOnSail.magnitude;
+    }
+
+    public void rotate(float degrees) {
+        transform.Rotate(Vector3.up, degrees);
+        rotation += degrees;
+    }
+
+    public void resetRotation() {
+        rotate(-rotation);
     }
 }
