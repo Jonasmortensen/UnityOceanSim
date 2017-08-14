@@ -34,8 +34,13 @@ public class MapGenerator : MonoBehaviour {
 	}
 
     public void GenerateMap() {
-        float[,] noiseMap = Noise.GenerateNoiseMap(mapWidth, mapHeight, seed, noiseScale, octaves, persistance, lacunarity, offset);
+        //float[,] noiseMap = Noise.GenerateNoiseMap(mapWidth, mapHeight, seed, noiseScale, octaves, persistance, lacunarity, offset);
+        MyNoise noise = new MyNoise(seed, noiseScale, octaves, persistance, lacunarity);
+        Island island = new Island(new Vector2(0, 0), 200f, noise);
 
+        float viewSize = 300;
+
+        float[,] noiseMap = island.getHeightMap(mapWidth, mapHeight, viewSize, viewSize, new Vector2(-viewSize / 2f + offset.x, -viewSize / 2f + offset.y));
 
         Color[] colorMap = new Color[mapWidth * mapHeight];
         for(int y = 0; y < mapHeight; y++) {
